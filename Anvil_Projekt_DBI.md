@@ -1,102 +1,58 @@
+**ANVIL PROJEKT**
+## GitHub Link und Publish Link
+https://github.com/laura10450/AnvilProjekt
+https://simple-fumbling-river-dolphin.anvil.app
+
 ## AUSGANGSTEXT
 Das Fitnessstudio verwaltet Mitglieder, Trainer, Kurse, Mitgliedschaften, Anmeldungen und Zahlungen.
-
 Ein Mitglied wird mit MitgliedID, Name, Geburtsdatum, E-Mail und Telefonnummer gespeichert. Ein Mitglied kann mehrere Mitgliedschaften besitzen, beispielsweise unterschiedliche Tarifmodelle. Jede Mitgliedschaft ist eindeutig einem Mitglied zugeordnet und enthält eigene Attribute wie MG_ID, Datum und Preis.
-
 Trainer werden mit TrainerID, Name, Geburtsdatum und Spezialisierung erfasst. Ein Trainer kann mehrere Kurse leiten, jedoch wird jeder Kurs genau einem Trainer zugeordnet.
-
 Ein Kurs besitzt eine KursID, einen Titel und einen Fremdschlüssel auf den Trainer. Ein Kurs kann mehrere Teilnehmer haben.
-
 Die Anmeldung bildet die Verbindung zwischen Mitgliedschaft und Kurs. Sie enthält eine eigene ID (A_ID), das Datum der Anmeldung sowie die Fremdschlüssel MG_ID (Mitgliedschaft) und K_ID (Kurs). Eine Mitgliedschaft kann mehrere Anmeldungen besitzen, ebenso kann ein Kurs mehrere Anmeldungen haben. Jede Anmeldung gehört jedoch genau zu einer Mitgliedschaft und genau zu einem Kurs.
-
 Zu jeder Anmeldung wird genau eine Zahlung erfasst. Die Zahlung enthält eine ZahlungsID (Z_ID), den Betrag, die Methode sowie einen eindeutigen Fremdschlüssel auf die Anmeldung. Dadurch entsteht eine 1:1-Beziehung zwischen Anmeldung und Zahlung. Mehrfachzahlungen oder Teilzahlungen sind nicht vorgesehen.
 
 ## ERM
 ![alt text](ERM_Training-1.png)
+
 ## RM
-Relationales Modell (RM)
 Mitglied
+    MitgliedID (PK)
+    Name
+    Geburtsdatum
+    Email
+    Telefon
 
-MitgliedID (PK)
-
-Name
-
-Geburtsdatum
-
-Email
-
-Telefonnummer
+Mitglied
+    MitgliedID (PK)
+    Name
+    Geburtsdatum
+    Email
+    Telefon
 
 Trainer
-
-TrainerID (PK)
-
-Name
-
-Spezialisierung
-
-Email
-
-Kurs
-
-KursID (PK)
-
-Titel
-
-TrainerID (FK → Trainer.TrainerID)
-
-Mitgliedschaft
-
-MitgliedschaftID (PK)
-
-Datum
-
-Preis
-
-MitgliedID (FK → Mitglied.MitgliedID)
-
-Beziehung:
-Mitglied (1) —— (n) Mitgliedschaft
+    TrainerID (PK)
+    Name
+    Geburtsdatum
+    Spezialisierung
 
 Anmeldung
-
-AnmeldungID (PK)
-
-MitgliedID (FK → Mitglied.MitgliedID)
-
-KursID (FK → Kurs.KursID)
-
-Anmeldedatum
-
-Beziehungen:
-Mitglied (1) —— (n) Anmeldung
-Kurs (1) —— (n) Anmeldung
+    AnmeldungID (PK)
+    MitgliedID (FK → Mitglied.MitgliedID)
+    KursID (FK → Kurs.KursID)
+    Anmeldedatum
 
 Zahlung
+    ZahlungID (PK)
+    AnmeldungID (FK → Anmeldung.AnmeldungID, UNIQUE)
+    Betrag
+    Methode
 
-ZahlungID (PK)
+## Beziehungen
+    Mitglied (1) —— (n) Anmeldung
+    Trainer (1) —— (n) Kurs
+    Kurs (1) —— (n) Anmeldung
+    Anmeldung (1) —— (1) Zahlung
 
-Betrag
-
-Zahlungsmethode
-
-AnmeldungID (FK → Anmeldung.AnmeldungID, UNIQUE)
-
-Beziehung:
-Anmeldung (1) —— (1) Zahlung
-
-Kardinalitäten zusammengefasst
-
-Mitglied → Mitgliedschaft (1:n)
-Mitglied → Anmeldung (1:n)
-Trainer → Kurs (1:n)
-Kurs → Anmeldung (1:n)
-Anmeldung → Zahlung (1:1)
-
-Tabellenanzahl: 6
-Primärschlüssel: definiert
-Fremdschlüssel: konsistent
-1:1 Beziehung korrekt über UNIQUE-FK umgesetzt
 
 ## Datenbank Script
 ```sql
@@ -219,4 +175,3 @@ Dashboards
 - Umsatz pro Kurs 
 - Teilnehmer pro Kurs
 
-## GitHub Link und Publish Link
